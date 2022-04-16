@@ -32,7 +32,7 @@ class HostService:
         except Exception as e:
             print(f'Exception: {e}')
 
-    def get_all(self):
+    def get_all_for_credentials(self):
         try:
             hosts = self.repo.get_all()
             host_dtos =[Adaptor.model_to_credentials_dto(host)for host in hosts]

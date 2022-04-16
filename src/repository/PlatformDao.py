@@ -24,6 +24,10 @@ class PlatformDao:
     def get_all(self):
         return self.persist.find_all_in_table('Platform')
 
+    def get_by_id(self,id) -> tuple:
+        result = self.persist.find_by_field_in_table('Platform','id',id)
+        return result[0] if len(result) else tuple()
+
     def get_all_by_ids(self,ids):
         return self.persist.find_all_in_table_by_values('Platform','id',ids)
         

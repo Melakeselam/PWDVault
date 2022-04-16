@@ -26,6 +26,10 @@ class PlatformService:
         platform_dtos = [Adaptor.model_to_dto(platform) for platform in platforms]
         return platform_dtos
 
+    def get_by_id(self,id:int) -> PlatformDto:
+        platform = self.platform_repo.get_by_id(id)
+        return Adaptor.model_to_dto(platform) if platform else None
+
     def get_all_by_ids(self,ids:list):
         platforms = self.platform_repo.get_all_by_ids(ids)
         platform_dtos = [Adaptor.model_to_dto(platform) for platform in platforms]

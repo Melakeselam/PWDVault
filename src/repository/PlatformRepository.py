@@ -27,6 +27,11 @@ class PlatformRepository:
         
         return platforms
 
+    def get_by_id(self, id:int) -> Platform:
+        row = self.platformDao.get_by_id(id)
+        return Platform(row[0], row[1], row[2]) if len(row) else None
+
+
     def get_all_by_ids(self, ids:list):
         platforms = []
         rows = self.platformDao.get_all_by_ids(ids)
