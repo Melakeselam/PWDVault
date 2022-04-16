@@ -1,29 +1,42 @@
+from ui.main_menu_sub_menus.HostMenu import HostMenu
+from ui.main_menu_sub_menus.PlatformMenu import PlatformMenu
+from utils.UiUtils import UiUtils
+from ui.main_menu_sub_menus.CategoryMenu import CategoryMenu
 import sys
 import os
+from ui.Menus import Menus
 sys.path.append(os.path.abspath(os.path.join('..', 'utils')))
-from ui.main_menu_sub_menus.SetupMenu import SetupMenu
-from utils.UiUtils import UiUtils
 
 
 class MainMenu:
-    def __init__(self) -> None:
-        pass
+    def __init__(self, user_id) -> None:
+        self.user_id = user_id
+        self.category_menu = CategoryMenu(self.user_id)
+        self.host_menu = HostMenu(self.user_id)
+        self.platform_menu = PlatformMenu(self.user_id)
 
-    def execMainMenuChoice(self, choice):
+    def exec_main_menu(self):
+        main_menu_level = True
+        while main_menu_level:
+            UiUtils.clear()
+            menu_choice = UiUtils.disp_and_select_from_menu(Menus.main_menu)
+            main_menu_level = self.exec_main_menu_choice(int(menu_choice))
+
+    def exec_main_menu_choice(self, choice):
         if choice == 1:
-            print("Create Credentials")
+            self.host_menu.exec_retrieve_credentials_menu()
         elif choice == 2:
-            print("Retrieve Credentials")
+            input("Update Credentials")
         elif choice == 3:
-            print("Update Expired Passwords")
+            input("Add New Host")
         elif choice == 4:
-            print("Show all Expired Passwords")
+            input("Manage Hosts")
         elif choice == 5:
-            print("Show Categories")
+            self.platform_menu.exec_platform_menu()
         elif choice == 6:
-            SetupMenu().execSetupMenu()
+            self.category_menu.exec_category_menu()
         elif choice == 7:
             return False
         else:
-            print("This menu choice is not available!")
+            input("This menu choice is not available!")
         return True

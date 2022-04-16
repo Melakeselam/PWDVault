@@ -1,0 +1,2 @@
+class MissingDataFromRepositoryError(Exception):
+    pass
