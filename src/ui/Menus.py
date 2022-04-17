@@ -9,7 +9,7 @@ class Menus:
 
     main_menu = {"title": "MAIN MENU",
                  1: "Retrieve Credentials",
-                 2: "Update Credentials",
+                 2: "Update Critical Passwords",
                  3: "Add New Host",
                  4: "Manage Hosts",
                  5: "Manage Platforms",
@@ -23,6 +23,15 @@ class Menus:
                                 3: "Show by Host Address",
                                 4: "Show by Host Name",
                                 5: "Show by Host Id",
+                                6: "Return" 
+                                }
+
+    update_credentials_menu = {"title": "UPDATE CREDENTIALS MENU",
+                                1: "Fetch by Host Platform and Update",
+                                2: "Fetch by Host Category and Update",
+                                3: "Fetch by Host Address and Update",
+                                4: "Fetch by Host Name and Update",
+                                5: "Fetch by Host Id and Update",
                                 6: "Return" 
                                 }
 

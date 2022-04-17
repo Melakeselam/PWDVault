@@ -1,4 +1,5 @@
-from ui.main_menu_sub_menus.HostMenu import HostMenu
+from ui.main_menu_sub_menus.HostCommandMenu import HostCommandMenu
+from ui.main_menu_sub_menus.HostQueryMenu import HostQueryMenu
 from ui.main_menu_sub_menus.PlatformMenu import PlatformMenu
 from utils.UiUtils import UiUtils
 from ui.main_menu_sub_menus.CategoryMenu import CategoryMenu
@@ -12,7 +13,8 @@ class MainMenu:
     def __init__(self, user_id) -> None:
         self.user_id = user_id
         self.category_menu = CategoryMenu(self.user_id)
-        self.host_menu = HostMenu(self.user_id)
+        self.host_query_menu = HostQueryMenu(self.user_id)
+        self.host_command_menu = HostCommandMenu(self.user_id)
         self.platform_menu = PlatformMenu(self.user_id)
 
     def exec_main_menu(self):
@@ -24,9 +26,9 @@ class MainMenu:
 
     def exec_main_menu_choice(self, choice):
         if choice == 1:
-            self.host_menu.exec_retrieve_credentials_menu()
+            self.host_query_menu.exec_query_credentials_menu()
         elif choice == 2:
-            input("Update Credentials")
+            input("Updating Passwords")
         elif choice == 3:
             input("Add New Host")
         elif choice == 4:
