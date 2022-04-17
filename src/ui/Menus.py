@@ -22,9 +22,8 @@ class Menus:
                                 2: "Show by Host Category",
                                 3: "Show by Host Address",
                                 4: "Show by Host Name",
-                                5: "Show all Hosts",
-                                6: "Retrieve by Host Id",
-                                7: "Return"
+                                5: "Show by Host Id",
+                                6: "Return" 
                                 }
 
     host_menu = {"title": "MANAGE HOSTS MENU",

@@ -35,10 +35,8 @@ class HostMenu:
         elif choice == 4:
             self.retrieve_by_host_name()
         elif choice == 5:
-            self.retrieve_all()
+            self.retrieve_by_host_id()
         elif choice == 6:
-            input("retrieve by id")
-        elif choice == 7:
             return False
         else:
             input("This menu choice is not available!")
@@ -49,7 +47,7 @@ class HostMenu:
             self.hosts = self.service.get_all_for_credentials()
         self.show_platform_id_and_name_columns_on_pause(False)
         platform_id = int(input('Select Platform Id: '))
-        hosts = self.extract_by_platform_id(platform_id)
+        hosts = self.map_host_to_id_filtered_by_platform_id(platform_id)
         if len(hosts):
             self.show_host_info_on_pause(False, hosts.values())
             host_id = int(input('Select Host by id: '))
@@ -65,7 +63,7 @@ class HostMenu:
         id_maps = self.show_category_by_platform_id_and_category_name_columns_on_pause(False)
         id_num = int(input('Select ID_NO: '))
         id_map = id_maps[id_num-1]
-        host_map = self.extract_host_by_category(id_map['platform_id'], id_map['category_name'])
+        host_map = self.map_host_to_id_filtered_by_category(id_map['platform_id'], id_map['category_name'])
         if len(host_map):
             self.show_host_info_on_pause(False, host_map.values())
             host_id = int(input('Select Host by ID: '))
@@ -81,7 +79,7 @@ class HostMenu:
         address_maps = self.show_host_address_columns_on_pause(False)
         item_num = int(input('Select ADDR_NO: '))
         address_map = address_maps[item_num-1]
-        host_map = self.extract_host_by_address(address_map['host_address'])
+        host_map = self.map_host_to_id_filtered_by_address(address_map['host_address'])
         if len(host_map):
             self.show_host_info_on_pause(False, host_map.values())
             host_id = int(input('Select Host by ID: '))
@@ -97,7 +95,7 @@ class HostMenu:
         name_maps = self.show_host_name_columns_on_pause(False)
         item_num = int(input('Select NAME_NO: '))
         name_map = name_maps[item_num-1]
-        host_map = self.extract_host_by_name(name_map['host_name'])
+        host_map = self.map_host_to_id_filtered_by_name(name_map['host_name'])
         if len(host_map):
             self.show_host_info_on_pause(False, host_map.values())
             host_id = int(input('Select Host by ID: '))
@@ -106,11 +104,12 @@ class HostMenu:
         else:
             input(
                 f"There are no hosts with HOST_NAME: {name_map['host_name']}")
+
     
-    def retrieve_all(self):
+    def retrieve_by_host_id(self):
         if not self.hosts:
             self.hosts = self.service.get_all_for_credentials()
-        host_map = self.extract_all()
+        host_map = self.map_host_to_id()
         if len(host_map):
             self.show_host_info_on_pause(False, host_map.values())
             host_id = int(input('Select Host by ID: '))
@@ -206,7 +205,7 @@ class HostMenu:
             f"PLATFORM: {platform.name() if platform else ''}\nADDRESS: {host.address()}\n\tUSERNAME: {host.credentials().username()}\n\tPASSWORD: {host.credentials().password()}")
         input('\nPress <enter> to continue...')
 
-    def extract_by_platform_id(self, platform_id):
+    def map_host_to_id_filtered_by_platform_id(self, platform_id):
         try:
             host_dtos_map = {}
             for host in self.hosts:
@@ -217,18 +216,19 @@ class HostMenu:
         except Exception as e:
             print(f'Exception: {e}')
 
-    def extract_host_by_category(self, platform_id:int, category_name:str):
+    def map_host_to_id_filtered_by_category(self, platform_id:int, category_name:str):
         hosts = [filtered for filtered in filter(lambda host: host.platform_id() == platform_id 
             and host.category_name() == category_name,self.hosts)]
         return {host.id():host for host in hosts}
 
-    def extract_host_by_address(self, address:str):
+    def map_host_to_id_filtered_by_address(self, address:str):
         hosts = [filtered for filtered in filter(lambda host: host.address() == address,self.hosts)]
         return {host.id():host for host in hosts}
     
-    def extract_host_by_name(self, name:str):
+    def map_host_to_id_filtered_by_name(self, name:str):
         hosts = [filtered for filtered in filter(lambda host: host.name() == name,self.hosts)]
         return {host.id():host for host in hosts}
     
-    def extract_all(self):
+    def map_host_to_id(self):
         return {host.id():host for host in self.hosts}
+    
