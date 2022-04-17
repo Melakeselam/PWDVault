@@ -32,13 +32,13 @@ class HostMenu:
             self.retrieve_by_category()
         elif choice == 3:
             self.retrieve_by_address()
-        elif choice == 3:
-            self.retrieve_by_host_name()
         elif choice == 4:
-            input("show all Hosts")
+            self.retrieve_by_host_name()
         elif choice == 5:
-            input("retrieve by id")
+            self.retrieve_all()
         elif choice == 6:
+            input("retrieve by id")
+        elif choice == 7:
             return False
         else:
             input("This menu choice is not available!")
@@ -92,17 +92,34 @@ class HostMenu:
                 f"There are no hosts with HOST_ADDRESS: {address_map['host_address']}")
 
     def retrieve_by_host_name(self):
-        hosts = self.service.get_all_for_credentials()
-        self.show_host_name_address_columns_on_pause(False, hosts)
-        host_name = input('Enter Host Name: ')
-        host_credentials_map = self.service.get_all_by_host_name(host_name)
-        if len(host_credentials_map) > 0:
-            self.show_host_info_on_pause(False, host_credentials_map.values())
-            host_id = int(input('Select Host by id: '))
-            selected_host = host_credentials_map[host_id]
+        if not self.hosts:
+            self.hosts = self.service.get_all_for_credentials()
+        name_maps = self.show_host_name_columns_on_pause(False)
+        item_num = int(input('Select NAME_NO: '))
+        name_map = name_maps[item_num-1]
+        host_map = self.extract_host_by_name(name_map['host_name'])
+        if len(host_map):
+            self.show_host_info_on_pause(False, host_map.values())
+            host_id = int(input('Select Host by ID: '))
+            selected_host = host_map[host_id]
             self.show_credentials(selected_host)
         else:
-            input(f'There are no hosts with HOST_NAME: {host_name}')
+            input(
+                f"There are no hosts with HOST_NAME: {name_map['host_name']}")
+    
+    def retrieve_all(self):
+        if not self.hosts:
+            self.hosts = self.service.get_all_for_credentials()
+        host_map = self.extract_all()
+        if len(host_map):
+            self.show_host_info_on_pause(False, host_map.values())
+            host_id = int(input('Select Host by ID: '))
+            selected_host = host_map[host_id]
+            self.show_credentials(selected_host)
+        else:
+            input(
+                f"There are no hosts.")
+
 
     def show_platform_id_and_name_columns_on_pause(self, pause: bool):
         try:
@@ -152,6 +169,22 @@ class HostMenu:
                 f"ERR: exception occured while displaying 'Host Address' as columns: {str(e)}")
             return False
 
+    def show_host_name_columns_on_pause(self, pause: bool):
+        try:
+            field_names = ["NAME_NO","HOST_NAME"]
+            unique_host_names = {host.name() for host in self.hosts}
+            host_name_maps = [{'name_no':i+1,'host_name':name}
+                             for i,name in enumerate(unique_host_names)]
+            UiUtils.clear()
+            UiUtils.disp_as_columns(field_names, host_name_maps)
+            if pause:
+                input("Press <enter> to continue...")
+            return host_name_maps
+        except Exception as e:
+            input(
+                f"ERR: exception occured while displaying 'Host Name' as columns: {str(e)}")
+            return False
+
     def show_host_info_on_pause(self, pause: bool, hosts: list):
         try:
             UiUtils.clear()
@@ -192,3 +225,10 @@ class HostMenu:
     def extract_host_by_address(self, address:str):
         hosts = [filtered for filtered in filter(lambda host: host.address() == address,self.hosts)]
         return {host.id():host for host in hosts}
+    
+    def extract_host_by_name(self, name:str):
+        hosts = [filtered for filtered in filter(lambda host: host.name() == name,self.hosts)]
+        return {host.id():host for host in hosts}
+    
+    def extract_all(self):
+        return {host.id():host for host in self.hosts}
