@@ -18,33 +18,50 @@ class HostQueryMenu:
 
     def exec_query_credentials_menu(self, return_value:bool = False) -> HostDto:
         remain_at_current_menu_level = True
+        show_result_on_pause = False if return_value else True
         while remain_at_current_menu_level:
             UiUtils.clear()
             menu_choice = UiUtils.disp_and_select_from_menu(
                 Menus.retrieve_credentials_menu)
-            retrieved_host = self.exec_menu_choice(
-                int(menu_choice))
-            remain_at_current_menu_level = False if return_value and retrieved_host else True
+            retrieved_host = None
+            try:
+                retrieved_host = self.exec_menu_choice(
+                    int(menu_choice), show_result_on_pause)
+
+                if retrieved_host == 'return':
+                    remain_at_current_menu_level = False
+                    retrieved_host = None
+                elif return_value:
+                    remain_at_current_menu_level = False
+                else:
+                    remain_at_current_menu_level = True
+            
+            except Exception as e:
+                remain_at_current_menu_level = True
+
+            
         return retrieved_host
         
-    def exec_menu_choice(self, choice):
+    def exec_menu_choice(self, choice:int, show_on_pause:bool):
+        retrieved_host = None
         if choice == 1:
-            retrieved_host = self.retrieve_by_platform()
+            retrieved_host = self.retrieve_by_platform(show_on_pause)
         elif choice == 2:
-            retrieved_host = self.retrieve_by_category()
+            retrieved_host = self.retrieve_by_category(show_on_pause)
         elif choice == 3:
-            retrieved_host = self.retrieve_by_address()
+            retrieved_host = self.retrieve_by_address(show_on_pause)
         elif choice == 4:
-            retrieved_host = self.retrieve_by_host_name()
+            retrieved_host = self.retrieve_by_host_name(show_on_pause)
         elif choice == 5:
-            retrieved_host = self.retrieve_by_host_id()
+            retrieved_host = self.retrieve_by_host_id(show_on_pause)
         elif choice == 6:
-            return None
+            return 'return'
         else:
             input("This menu choice is not available!")
+            raise Exception('Improper Menu Selection')
         return retrieved_host
 
-    def retrieve_by_platform(self) -> HostDto:
+    def retrieve_by_platform(self,show_on_pause:bool = True) -> HostDto:
         if not self._hosts:
             self._hosts = self.service.get_all_for_credentials()
         self.show_platform_id_and_name_columns_on_pause(False)
@@ -54,14 +71,14 @@ class HostQueryMenu:
             self.show_host_info_on_pause(False, hosts.values())
             host_id = int(input('Select Host by id: '))
             selected_host = hosts[host_id]
-            self.show_credentials(selected_host)
+            self.show_credentials(selected_host,show_on_pause)
             return selected_host
         else:
             print(f'There are no hosts with PLATFORM_ID: {platform_id}')
             input('Press <enter> to continue...')
         return None
 
-    def retrieve_by_category(self) -> HostDto:
+    def retrieve_by_category(self,show_on_pause:bool = True) -> HostDto:
         if not self._hosts:
             self._hosts = self.service.get_all_for_credentials()
         id_maps = self.show_category_by_platform_id_and_category_name_columns_on_pause(False)
@@ -72,14 +89,14 @@ class HostQueryMenu:
             self.show_host_info_on_pause(False, host_map.values())
             host_id = int(input('Select Host by ID: '))
             selected_host = host_map[host_id]
-            self.show_credentials(selected_host)
+            self.show_credentials(selected_host,show_on_pause)
             return selected_host
         else:
             input(
                 f'There are no hosts with PLATFORM_ID: {id_map["platform_id"]} and CATEGORY_NAME: {id_map["category_name"]}')
         return None
 
-    def retrieve_by_address(self) -> HostDto:
+    def retrieve_by_address(self,show_on_pause:bool = True) -> HostDto:
         if not self._hosts:
             self._hosts = self.service.get_all_for_credentials()
         address_maps = self.show_host_address_columns_on_pause(False)
@@ -90,14 +107,14 @@ class HostQueryMenu:
             self.show_host_info_on_pause(False, host_map.values())
             host_id = int(input('Select Host by ID: '))
             selected_host = host_map[host_id]
-            self.show_credentials(selected_host)
+            self.show_credentials(selected_host,show_on_pause)
             return selected_host
         else:
             input(
                 f"There are no hosts with HOST_ADDRESS: {address_map['host_address']}")
         return None
 
-    def retrieve_by_host_name(self) -> HostDto:
+    def retrieve_by_host_name(self,show_on_pause:bool = True) -> HostDto:
         if not self._hosts:
             self._hosts = self.service.get_all_for_credentials()
         name_maps = self.show_host_name_columns_on_pause(False)
@@ -108,14 +125,14 @@ class HostQueryMenu:
             self.show_host_info_on_pause(False, host_map.values())
             host_id = int(input('Select Host by ID: '))
             selected_host = host_map[host_id]
-            self.show_credentials(selected_host)
+            self.show_credentials(selected_host,show_on_pause)
             return selected_host
         else:
             input(
                 f"There are no hosts with HOST_NAME: {name_map['host_name']}")
         return None
     
-    def retrieve_by_host_id(self) -> HostDto:
+    def retrieve_by_host_id(self,show_on_pause:bool = True) -> HostDto:
         if not self._hosts:
             self._hosts = self.service.get_all_for_credentials()
         host_map = self.map_host_to_id()
@@ -123,7 +140,7 @@ class HostQueryMenu:
             self.show_host_info_on_pause(False, host_map.values())
             host_id = int(input('Select Host by ID: '))
             selected_host = host_map[host_id]
-            self.show_credentials(selected_host)
+            self.show_credentials(selected_host,show_on_pause)
             return selected_host
         else:
             input(
@@ -208,12 +225,13 @@ class HostQueryMenu:
                 f"ERR: exception occured while displaying 'Hosts' as columns: {str(e)}")
             return False
 
-    def show_credentials(self, host: HostDto):
+    def show_credentials(self, host: HostDto, pause: bool):
         platform = self.platform_service.get_by_id(host.platform_id())
         UiUtils.clear()
         print(
             f"PLATFORM: {platform.name() if platform else ''}\nADDRESS: {host.address()}\n\tUSERNAME: {host.credentials().username()}\n\tPASSWORD: {host.credentials().password()}")
-        input('\nPress <enter> to continue...')
+        if pause:
+            input('\nPress <enter> to continue...')
 
     def map_host_to_id_filtered_by_platform_id(self, platform_id):
         try:

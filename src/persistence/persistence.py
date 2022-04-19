@@ -1,6 +1,7 @@
 from datetime import datetime
 import mysql.connector
 import numpy as np
+from config.configuration import Configuration
 from domain.Credentials import Credentials,Status
 from service.PwdGenerator import PwdGenerator as Generator
 
@@ -22,18 +23,23 @@ entity_table_fields = dict(
 
 class Persistence:
     def __init__(self) -> None:
+        self.db_config = Configuration('database')
+        self.app_config = Configuration('application')
         self.mysqldb = mysql.connector.connect(
-            host='localhost',
-            user='root',
-            password='Yeamanuel0108'
+            host=self.db_config.get('host'),
+            user=self.db_config.get('username'),
+            password=self.db_config.get('password')
         )
 
         self.db = 'pwd_vault'
         self.dbcursor = self.mysqldb.cursor()
 
     def startPersistence(self):
-        reset=True if input('Reset DB? (y/n)') == 'y' else False
-        populate=True if reset and input('Populate Table? (y/n)') == 'y' else False
+        reset = False
+        populate = False
+        if self.app_config.get('environment') in ['dev','stage']:
+            reset=True if input('Reset DB? (y/n)') == 'y' else False
+            populate=True if reset and input('Populate Table? (y/n)') == 'y' else False
         if not reset:
             self.setupDb()
         else:

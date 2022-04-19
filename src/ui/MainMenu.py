@@ -1,3 +1,4 @@
+import re
 from ui.main_menu_sub_menus.HostCommandMenu import HostCommandMenu
 from ui.main_menu_sub_menus.HostQueryMenu import HostQueryMenu
 from ui.main_menu_sub_menus.PlatformMenu import PlatformMenu
@@ -28,7 +29,7 @@ class MainMenu:
         if choice == 1:
             self.host_query_menu.exec_query_credentials_menu()
         elif choice == 2:
-            input("Updating Passwords")
+            input(f"Retrieved host:{str(self.host_query_menu.exec_query_credentials_menu(return_value=True))}")
         elif choice == 3:
             input("Add New Host")
         elif choice == 4:

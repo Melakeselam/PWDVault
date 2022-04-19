@@ -36,7 +36,7 @@ class UiUtils:
             print(rowTemplate.format(*values))
         print("=" * (len(titleRow) + tabs*5))
 
-    def disp_and_select_from_menu(menu):
+    def disp_and_select_from_menu(menu:dict) -> int:
         mnuList = ""
         for mnuIndx in range(1, len(menu), 1):
             mnuList = mnuList + "\t{}: {}\n".format(mnuIndx, menu[mnuIndx])
@@ -48,7 +48,7 @@ class UiUtils:
     {} \
     --------------------------------\n".format(menu["title"], mnuList)
         print(display)
-        return input("Choose Number of Selected Menu Item: ")
+        return int(input("Choose Number of Selected Menu Item: "))
 
     
     def request_input(inputRequests):

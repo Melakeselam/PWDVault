@@ -4,6 +4,14 @@ from multipledispatch import dispatch
 
 
 class HostDto:
+    _user_id = -1
+    _id = -1
+    _name = None
+    _address = None
+    _platform_id = -1
+    _category_name = None
+    _credentials = None
+    _custom_pwd_retention_period_in_hours = 0
     @dispatch(int, int, str, int, str, Credentials, str, int)
     def __init__(self, user_id: int, host_id: int, host_name: str, platform_id: int, category_name: str, credentials: Credentials, host_address: str, custom_pwd_retention_period_in_hours: int = 0):
         self._user_id = user_id
