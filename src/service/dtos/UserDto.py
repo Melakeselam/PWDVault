@@ -1,5 +1,5 @@
 from multipledispatch import dispatch
-from utils.DomainUtils import DomainUtils
+from src.utils.DomainUtils import DomainUtils
 
 
 class UserDto:

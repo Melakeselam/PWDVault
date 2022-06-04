@@ -1,5 +1,5 @@
-from domain.Host import Host
-from service.dtos.HostDto import HostDto
+from src.domain.Host import Host
+from src.service.dtos.HostDto import HostDto
 
 
 class HostDtoAdaptor:

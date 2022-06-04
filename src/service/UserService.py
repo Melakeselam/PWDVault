@@ -1,11 +1,10 @@
-from repository.UserRepository import UserRepository
-from service.adaptors.UserDtoAdaptor import UserDtoAdaptor as Adaptor
+from src.repository.UserRepository import UserRepository
+from src.service.adaptors.UserDtoAdaptor import UserDtoAdaptor as Adaptor
+from src.app.AppContext import AppContext
 class UserService:
 
-    repo = UserRepository()
-
-    def __init__(self) -> None:
-        pass
+    def __init__(self,app:AppContext) -> None:
+        self.repo = UserRepository(app)
 
     def add_user(self, user_dto):
         try:

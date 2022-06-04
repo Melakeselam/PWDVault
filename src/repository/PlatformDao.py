@@ -1,11 +1,11 @@
-from persistence.persistence import Persistence as Persist, entity_tables as tables
 from multipledispatch import dispatch
 
-class PlatformDao:
-    persist = Persist()
+from src.app.AppContext import AppContext
 
-    def __init__(self) -> None:
-        pass
+class PlatformDao:
+
+    def __init__(self,app:AppContext) -> None:
+        self.persist = app.persistence()
 
     @dispatch(str,str)
     def save(self, name, description):

@@ -1,6 +1,6 @@
 import os
 import sys
-from utils.DomainUtils import DomainUtils
+from src.utils.DomainUtils import DomainUtils
 from multipledispatch import dispatch
 
 # HOURS_IN_A_DAY = 24

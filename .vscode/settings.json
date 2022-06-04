@@ -1,0 +1,16 @@
+{
+    "python.analysis.extraPaths": [
+        "./src/service",
+        "./src/service/dtos"
+    ],
+    "python.testing.unittestEnabled": true,
+    "python.testing.unittestArgs": [
+        "-v",
+        "-s",
+        "./src/test/unit",
+        "-p",
+        "*test*.py"
+    ],
+    "python.testing.pytestPath": "pytest",
+    "python.testing.pytestEnabled": false
+}

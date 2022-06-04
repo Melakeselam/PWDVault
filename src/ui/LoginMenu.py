@@ -1,15 +1,15 @@
-from service.dtos.UserDto import UserDto
-from utils.UiUtils import UiUtils
-from ui.Menus import Menus
-from service.AuthenticationService import AuthenticationService as AuthService
-from service.UserService import UserService
+from src.service.dtos.UserDto import UserDto
+from src.app.AppContext import AppContext
+from src.utils.UiUtils import UiUtils
+from src.ui.Menus import Menus
+from src.service.AuthenticationService import AuthenticationService as AuthService
+from src.service.UserService import UserService
 
 class LoginMenu:
 
-    user_service = UserService()
-
-    def __init__(self) -> None:
-        self.auth_service = AuthService()
+    def __init__(self,app:AppContext) -> None:
+        self.auth_service = AuthService(app)
+        self.user_service = UserService(app)
 
     def exec_login_menu(self):
         user_id = -1

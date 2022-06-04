@@ -1,11 +1,12 @@
 from numpy import equal
-from ui.Menus import Menus
-from ui.main_menu_sub_menus.PlatformMenu import PlatformMenu
-from service.PlatformService import PlatformService
-from service.dtos.PlatformDto import PlatformDto
-from service.CategoryService import CategoryService
-from service.dtos.CategoryDto import CategoryDto, PasswordRetentionPeriod
-from utils.UiUtils import UiUtils
+from src.app.AppContext import AppContext
+from src.ui.Menus import Menus
+from src.ui.main_menu_sub_menus.PlatformMenu import PlatformMenu
+from src.service.PlatformService import PlatformService
+from src.service.dtos.PlatformDto import PlatformDto
+from src.service.CategoryService import CategoryService
+from src.service.dtos.CategoryDto import CategoryDto, PasswordRetentionPeriod
+from src.utils.UiUtils import UiUtils
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join('..', 'utils')))
@@ -13,11 +14,11 @@ sys.path.append(os.path.abspath(os.path.join('..', 'persistence')))
 
 
 class CategoryMenu:
-    category_service = CategoryService()
     
-    def __init__(self, user_id) -> None:
+    def __init__(self, app:AppContext, user_id) -> None:
         self.user_id = user_id
-        self.platform_menu = PlatformMenu(user_id)
+        self.platform_menu = PlatformMenu(app, user_id)
+        self.category_service = CategoryService(app)
 
     def exec_category_menu(self):
         category_menu_level = True
@@ -136,7 +137,7 @@ class CategoryMenu:
 
             print("\t\tCATEGORIES TABLE")
             print("\t\t================")
-            UiUtils.dispTable(field_names, category_dtos)
+            UiUtils.disp_table(field_names, category_dtos)
             if pause:
                 input("Press <enter> to return to menu...")
             return category_dtos

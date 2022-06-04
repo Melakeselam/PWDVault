@@ -1,5 +1,5 @@
-from domain.Platform import Platform
-from service.dtos.PlatformDto import PlatformDto
+from src.domain.Platform import Platform
+from src.service.dtos.PlatformDto import PlatformDto
 
 class PlatformDtoAdaptor:
     def __init__(self) -> None:

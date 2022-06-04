@@ -1,11 +1,10 @@
-from service.UserService import UserService as UserService
-
-
+from src.service.UserService import UserService as UserService
+from src.app.AppContext import AppContext
 
 class AuthenticationService:
-    user_service = UserService()
-    def __init__(self) -> None:
-        pass
+    
+    def __init__(self, app:AppContext) -> None:
+        self.user_service = UserService(app)
 
     def authenticate(self, username_password):
         try:

@@ -1,9 +1,9 @@
 from datetime import datetime
 import mysql.connector
 import numpy as np
-from config.configuration import Configuration
-from domain.Credentials import Credentials,Status
-from service.PwdGenerator import PwdGenerator as Generator
+from src.config.configuration import Configuration
+from src.domain.Credentials import Credentials,PwdStatus
+from src.service.PwdGenerator import PwdGenerator as Generator
 
 
 entity_tables = {
@@ -22,9 +22,9 @@ entity_table_fields = dict(
 )
 
 class Persistence:
-    def __init__(self) -> None:
-        self.db_config = Configuration('database')
-        self.app_config = Configuration('application')
+    def __init__(self,app_config,db_config) -> None:
+        self.app_config:Configuration = app_config
+        self.db_config:Configuration = db_config
         self.mysqldb = mysql.connector.connect(
             host=self.db_config.get('host'),
             user=self.db_config.get('username'),
@@ -155,13 +155,13 @@ class Persistence:
             password=Generator.generatePassword(),
             date_created=datetime.today(),
             pwd_updated_date=datetime.today(),
-            pwd_expiration_date= Credentials.calc_exp_date(datetime.today(),90 * 24),
+            pwd_expiration_date= Credentials.calc_pwd_exp_date(datetime.today(),90 * 24),
             pwd_size=16,
             pwd_min_num_req=1,
             pwd_min_upper_req=1,
             pwd_min_special_req=1,
             pwd_special_req='#$%&',
-            status=Status.ACTIVE.name
+            status=PwdStatus.ACTIVE.name
         )
         credentials_populate_map_2 = dict(
             host_id=2,
@@ -169,13 +169,13 @@ class Persistence:
             password=Generator.generatePassword(),
             date_created=datetime.today(),
             pwd_updated_date=datetime.today(),
-            pwd_expiration_date= Credentials.calc_exp_date(datetime.today(),90 * 24),
+            pwd_expiration_date= Credentials.calc_pwd_exp_date(datetime.today(),90 * 24),
             pwd_size=16,
             pwd_min_num_req=1,
             pwd_min_upper_req=1,
             pwd_min_special_req=1,
             pwd_special_req='#$%&',
-            status=Status.CREATED.name
+            status=PwdStatus.CREATED.name
         )
         credentials_populate_map_3 = dict(
             host_id=3,
@@ -183,13 +183,13 @@ class Persistence:
             password=Generator.generatePassword(),
             date_created=datetime.today(),
             pwd_updated_date=datetime.today(),
-            pwd_expiration_date= Credentials.calc_exp_date(datetime.today(),90 * 24),
+            pwd_expiration_date= Credentials.calc_pwd_exp_date(datetime.today(),90 * 24),
             pwd_size=16,
             pwd_min_num_req=1,
             pwd_min_upper_req=1,
             pwd_min_special_req=1,
             pwd_special_req='#$%&',
-            status=Status.CREATED.name
+            status=PwdStatus.CREATED.name
         )
 
         self.insert_into_table('User',users_populate_map_1)

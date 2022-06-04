@@ -1,20 +1,21 @@
 from numpy import array
-from service.CategoryService import CategoryService
-from service.HostService import HostService
-from service.PlatformService import PlatformService
-from service.dtos.HostDto import HostDto
-from ui.Menus import Menus
-from ui.main_menu_sub_menus.CategoryMenu import CategoryMenu
-from utils.UiUtils import UiUtils
+from src.service.CategoryService import CategoryService
+from src.service.HostService import HostService
+from src.service.PlatformService import PlatformService
+from src.service.dtos.HostDto import HostDto
+from src.app.AppContext import AppContext
+from src.ui.Menus import Menus
+from src.ui.main_menu_sub_menus.CategoryMenu import CategoryMenu
+from src.utils.UiUtils import UiUtils
 
 
 class HostQueryMenu:
-    def __init__(self, user_id:int) -> None:
+    def __init__(self, app:AppContext, user_id:int) -> None:
         self._user_id = user_id
         self._hosts = None
-        self.platform_service = PlatformService()
-        self.category_service = CategoryService()
-        self.service = HostService(user_id)
+        self.platform_service = PlatformService(app)
+        self.category_service = CategoryService(app)
+        self.service = HostService(app, user_id)
 
     def exec_query_credentials_menu(self, return_value:bool = False) -> HostDto:
         remain_at_current_menu_level = True

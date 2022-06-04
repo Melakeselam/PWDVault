@@ -1,12 +1,12 @@
-from persistence.persistence import Persistence as Persist
+from src.app.AppContext import AppContext
+from src.domain.User import User
 
 class UserDao:
-    persist = Persist()
+    
+    def __init__(self,app:AppContext) -> None:
+        self.persist = app.persistence()
 
-    def __init__(self) -> None:
-        pass
-
-    def add_user(self,user):
+    def add_user(self,user:User):
         user_map = dict(
             first_name=user.first_name(),
             last_name=user.last_name(),

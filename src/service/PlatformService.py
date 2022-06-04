@@ -1,16 +1,16 @@
 import imp
-from repository.PlatformRepository import PlatformRepository as Repository
-from domain.Platform import Platform
-from service.dtos.PlatformDto import PlatformDto
-from service.adaptors.PlatformDtoAdaptor import PlatformDtoAdaptor as Adaptor
+from src.repository.PlatformRepository import PlatformRepository as Repository
+from src.domain.Platform import Platform
+from src.service.dtos.PlatformDto import PlatformDto
+from src.service.adaptors.PlatformDtoAdaptor import PlatformDtoAdaptor as Adaptor
+from src.app.AppContext import AppContext
 
 
 
 class PlatformService:
-    platform_repo = Repository()
-
-    def __init__(self) -> None:
-        pass
+    
+    def __init__(self, app:AppContext) -> None:
+        self.platform_repo = Repository(app)
 
     def add_platform(self, platform_dto):
         self.platform_repo.save(Adaptor.dto_to_model(platform_dto))

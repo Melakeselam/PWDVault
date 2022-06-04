@@ -1,11 +1,11 @@
-from persistence.persistence import Persistence as Persist
 from multipledispatch import dispatch
 
-class CategoryDao:
-    persist = Persist()
+from src.app.AppContext import AppContext
 
-    def __init__(self) -> None:
-        pass
+class CategoryDao:
+
+    def __init__(self, app:AppContext) -> None:
+        self.persist = app.persistence()
 
 
     def insert(self, platform_id, name, description, password_retention_period_in_hours):
@@ -25,4 +25,11 @@ class CategoryDao:
 
     def get_all(self):
         return self.persist.find_all_in_table('Category')
+
+    def get_by_id(self,platform_id:int,name:str):
+        
+        fields = ['platform_id','name']
+        values = [platform_id,name]
+        rows = self.persist.find_by_fields_in_table('Category',fields,values)
+        return rows[0]
         

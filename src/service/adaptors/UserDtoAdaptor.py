@@ -1,11 +1,11 @@
-from domain.User import User
-from service.dtos.UserDto import UserDto
+from src.domain.User import User
+from src.service.dtos.UserDto import UserDto
 
 class UserDtoAdaptor:
     def __init__(self) -> None:
         pass
 
-    def model_to_info_dto(user) -> UserDto:
+    def model_to_info_dto(user:User) -> UserDto:
         return UserDto(
             user.id(), 
             user.first_name(), 
@@ -13,7 +13,7 @@ class UserDtoAdaptor:
             user.username()
             )
 
-    def model_to_auth_dto(user) -> UserDto:
+    def model_to_auth_dto(user:User) -> UserDto:
         return UserDto(
             user.id(),
             user.username(),
@@ -27,7 +27,7 @@ class UserDtoAdaptor:
 
             )
     
-    def dto_to_model(user_dto) -> User:
+    def dto_to_model(user_dto:UserDto) -> User:
         return User(
             user_dto.id(),
             user_dto.first_name(), 

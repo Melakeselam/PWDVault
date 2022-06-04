@@ -1,11 +1,13 @@
-from domain.Category import Category
-from repository.CategoryRepository import CategoryRepository as Repository
-from service.adaptors.CategoryDtoAdaptor import CategoryDtoAdaptor as Adaptor
+from src.service.dtos.CategoryDto import CategoryDto
+from src.domain.Category import Category
+from src.repository.CategoryRepository import CategoryRepository as Repository
+from src.service.adaptors.CategoryDtoAdaptor import CategoryDtoAdaptor as Adaptor
+from src.app.AppContext import AppContext
 class CategoryService:
-    category_repo = Repository()
+    
 
-    def __init__(self) -> None:
-        pass
+    def __init__(self, app:AppContext) -> None:
+        self.category_repo = Repository(app)
 
     def add_category(self, category_dto):
         
@@ -23,3 +25,7 @@ class CategoryService:
         for category in categories:
             category_dtos.append(Adaptor.model_to_dto(category))
         return category_dtos
+
+    def get_by_id(self,platform_id:int, name:str) -> CategoryDto:
+        category = self.category_repo.get_by_id(platform_id,name)
+        return Adaptor.model_to_dto(category)

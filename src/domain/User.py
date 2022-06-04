@@ -1,4 +1,4 @@
-from utils.DomainUtils import DomainUtils
+from src.utils.DomainUtils import DomainUtils
 
 class User:
     def __init__(self,user_id, 

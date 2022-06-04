@@ -1,10 +1,11 @@
-from repository.UserDao import UserDao
-from domain.User import User
+from src.repository.UserDao import UserDao
+from src.domain.User import User
+from src.app.AppContext import AppContext
 class UserRepository:
-    dao = UserDao()
+    
 
-    def __init__(self) -> None:
-        pass
+    def __init__(self,app:AppContext) -> None:
+        self.dao = UserDao(app)
 
     def add_user(self, user):
         return self.dao.add_user(user)

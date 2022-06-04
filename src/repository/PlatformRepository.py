@@ -1,12 +1,12 @@
-from repository.PlatformDao import PlatformDao
-from domain.Platform import Platform
+from src.repository.PlatformDao import PlatformDao
+from src.domain.Platform import Platform
+from src.app.AppContext import AppContext
 
 
 class PlatformRepository:
-    platformDao = PlatformDao()
 
-    def __init__(self) -> None:
-        pass
+    def __init__(self, app:AppContext) -> None:
+        self.platformDao = PlatformDao(app)
 
     def save(self, platform):
         if platform.id() is None:
